@@ -1,7 +1,37 @@
-- name: Hello World Sample
-  hosts: all
+---
+- name: Manage packages using YUM
+  hosts: webservers
+  become: true
   tasks:
-    - name: Hello Message
-      debug:
-        msg: "Hello World!"
+
+    - name: Install the latest version of Apache (httpd)
+      ansible.builtin.yum:
+        name: httpd
+        state: latest
+
+    - name: Ensure specific packages are present (Multiple packages)
+      ansible.builtin.yum:
+        name:
+          - git
+          - wget
+          - curl
+        state: present
+
+    - name: Upgrade all system packages (Equivalent to 'yum update')
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+
+    - name: Remove/Uninstall the MariaDB server package
+      ansible.builtin.yum:
+        name: mariadb-server
+        state: absent
+        autoremove: true
+
+    - name: Install a package from a specific repository
+      ansible.builtin.yum:
+        name: nginx
+        enablerepo: epel
+        state: present
+
 
